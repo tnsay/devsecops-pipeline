@@ -12,7 +12,7 @@ test('GET /health returns healthy status', async () => {
   const response = await request(app).get('/health');
 
   assert.equal(response.status, 200);
-  // assert.equal(response.status, 201);
+  //assert.equal(response.status, 201);
   assert.equal(response.body.status, 'healthy');
   assert.equal(response.body.application, 'ShopCart API');
 });
