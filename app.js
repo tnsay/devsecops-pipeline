@@ -34,6 +34,21 @@ app.get('/db-health', async (req, res) => {
   }
 });
 
+// TEMPORARY INSECURE ROUTE FOR CODEQL DEMO
+app.get('/api/users/search', async (req, res) => {
+  try {
+    const username = req.query.username;
+
+    // INSECURE: User input is concatenated into SQL
+    const query = `SELECT * FROM users WHERE username = '${username}'`;
+
+    const result = await pool.query(query);
+    res.json(result.rows);
+  } catch {
+    res.status(500).json({ message: 'Search failed' });
+  }
+});
+
 // Protected profile route
 app.get('/api/profile', (req, res) => {
   const authHeader = req.headers.authorization || '';
