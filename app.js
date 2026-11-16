@@ -34,15 +34,30 @@ app.get('/db-health', async (req, res) => {
   }
 });
 
-// TEMPORARY INSECURE ROUTE FOR CODEQL DEMO
+// // TEMPORARY INSECURE ROUTE FOR CODEQL DEMO
+// app.get('/api/users/search', async (req, res) => {
+//   try {
+//     const username = req.query.username;
+
+//     // INSECURE: User input is concatenated into SQL
+//     const query = `SELECT * FROM users WHERE username = '${username}'`;
+
+//     const result = await pool.query(query);
+//     res.json(result.rows);
+//   } catch {
+//     res.status(500).json({ message: 'Search failed' });
+//   }
+// });
+
+// Secure user search route
 app.get('/api/users/search', async (req, res) => {
   try {
     const username = req.query.username;
 
-    // INSECURE: User input is concatenated into SQL
-    const query = `SELECT * FROM users WHERE username = '${username}'`;
+    // SECURE: Parameterized query prevents SQL injection
+    const query = 'SELECT * FROM users WHERE username = $1';
 
-    const result = await pool.query(query);
+    const result = await pool.query(query, [username]);
     res.json(result.rows);
   } catch {
     res.status(500).json({ message: 'Search failed' });
